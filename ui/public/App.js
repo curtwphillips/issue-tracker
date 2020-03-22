@@ -28,13 +28,13 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
 /* eslint "react/react-in-jsx-scope": "off" */
 
-/* globals React ReactDOM */
-
 /* eslint "react/jsx-no-undef": "off" */
 
 /* eslint "react/no-multi-comp": "off" */
 
 /* eslint "no-alert": "off" */
+
+/* globals React ReactDOM PropTypes */
 var dateRegex = new RegExp('^\\d\\d\\d\\d-\\d\\d-\\d\\d');
 
 function jsonDateReviver(key, value) {
@@ -203,6 +203,10 @@ var IssueAdd = /*#__PURE__*/function (_React$Component2) {
 
   return IssueAdd;
 }(React.Component);
+
+IssueAdd.propTypes = {
+  createIssue: PropTypes.func.isRequired
+};
 
 var IssueList = /*#__PURE__*/function (_React$Component3) {
   _inherits(IssueList, _React$Component3);

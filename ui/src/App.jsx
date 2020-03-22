@@ -1,8 +1,8 @@
 /* eslint "react/react-in-jsx-scope": "off" */
-/* globals React ReactDOM */
 /* eslint "react/jsx-no-undef": "off" */
 /* eslint "react/no-multi-comp": "off" */
 /* eslint "no-alert": "off" */
+/* globals React ReactDOM PropTypes */
 
 const dateRegex = new RegExp('^\\d\\d\\d\\d-\\d\\d-\\d\\d');
 
@@ -115,6 +115,10 @@ class IssueAdd extends React.Component {
     );
   }
 }
+
+IssueAdd.propTypes = {
+  createIssue: PropTypes.func.isRequired,
+};
 
 class IssueList extends React.Component {
   constructor() {
