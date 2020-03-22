@@ -1,9 +1,8 @@
 const fs = require('fs');
 const express = require('express');
 const { ApolloServer, UserInputError } = require('apollo-server-express');
-const { GraphQLScalarType } = require('graphql');
-const { Kind } = require('graphql/language');
 const { MongoClient } = require('mongodb');
+const GraphQLDate = require('./graphql_date.js');
 
 require('dotenv').config();
 
@@ -32,27 +31,6 @@ function validateIssue(issue) {
     throw new UserInputError('Invalid input(s)', { errors });
   }
 }
-
-const GraphQLDate = new GraphQLScalarType({
-  name: 'GraphQLDate',
-  description: 'A Date() type in GraphQL as a scalar',
-  parseValue(value) {
-    const dateValue = new Date(value);
-    const response = Number.isNaN(dateValue.getTime()) ? undefined : dateValue;
-    return response;
-  },
-  parseLiteral(ast) {
-    if (ast.kind === Kind.STRING) {
-      const value = new Date(ast.value);
-      const response = Number.isNaN(value.getTime()) ? undefined : value;
-      return response;
-    }
-    return undefined;
-  },
-  serialize(value) {
-    return value.toISOString();
-  },
-});
 
 async function issueAdd(_, { issue }) {
   console.log('issueAdd:\n', issue);
