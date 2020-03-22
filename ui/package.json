@@ -10,10 +10,13 @@
   "scripts": {
     "#start": "UI server. HMR is enabled in dev mode.",
     "start": "node dist/server.js",
+    "start-dev": "nodemon -w uiserver.js uiserver.js",
     "#lint": "Runs ESLint on all relevant files",
     "lint": "eslint server src browser --ext js,jsx",
     "#compile": "Generates JS bundles for production. Use with start.",
     "compile": "webpack --mode production",
+    "compile-dev": "babel src --out-dir public",
+    "watch-dev": "babel src --out-dir public --watch --verbose",
     "#watch-server-hmr": "Recompile server HMR bundle on changes.",
     "watch-server-hmr": "webpack -w --config webpack.serverHMR.js",
     "#dev-all": "Dev mode: watch for server changes and start UI server",
