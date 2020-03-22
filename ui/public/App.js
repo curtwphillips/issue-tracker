@@ -26,6 +26,15 @@ function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
+/* eslint "react/react-in-jsx-scope": "off" */
+
+/* globals React ReactDOM */
+
+/* eslint "react/jsx-no-undef": "off" */
+
+/* eslint "react/no-multi-comp": "off" */
+
+/* eslint "no-alert": "off" */
 var dateRegex = new RegExp('^\\d\\d\\d\\d-\\d\\d-\\d\\d');
 
 function jsonDateReviver(key, value) {
@@ -35,7 +44,8 @@ function jsonDateReviver(key, value) {
 
 function graphQLFetch(_x) {
   return _graphQLFetch.apply(this, arguments);
-}
+} // eslint-disable-next-line react/prefer-stateless-function
+
 
 function _graphQLFetch() {
   _graphQLFetch = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3(query) {
@@ -90,8 +100,9 @@ function _graphQLFetch() {
             _context3.prev = 13;
             _context3.t0 = _context3["catch"](1);
             alert("Error in sending data to server: ".concat(_context3.t0.message));
+            return _context3.abrupt("return", null);
 
-          case 16:
+          case 17:
           case "end":
             return _context3.stop();
         }
@@ -122,13 +133,14 @@ var IssueFilter = /*#__PURE__*/function (_React$Component) {
   return IssueFilter;
 }(React.Component);
 
-function IssueRow(props) {
-  var issue = props.issue;
+function IssueRow(_ref) {
+  var issue = _ref.issue;
   return /*#__PURE__*/React.createElement("tr", null, /*#__PURE__*/React.createElement("td", null, issue.id), /*#__PURE__*/React.createElement("td", null, issue.status), /*#__PURE__*/React.createElement("td", null, issue.owner), /*#__PURE__*/React.createElement("td", null, issue.created.toDateString()), /*#__PURE__*/React.createElement("td", null, issue.effort), /*#__PURE__*/React.createElement("td", null, issue.due ? issue.due.toDateString() : ''), /*#__PURE__*/React.createElement("td", null, issue.title));
 }
 
-function IssueTable(props) {
-  var issueRows = props.issues.map(function (issue) {
+function IssueTable(_ref2) {
+  var issues = _ref2.issues;
+  var issueRows = issues.map(function (issue) {
     return /*#__PURE__*/React.createElement(IssueRow, {
       key: issue.id,
       issue: issue
@@ -164,7 +176,8 @@ var IssueAdd = /*#__PURE__*/function (_React$Component2) {
         title: form.title.value,
         due: new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * 10)
       };
-      this.props.createIssue(issue);
+      var createIssue = this.props.createIssue;
+      createIssue(issue);
       form.owner.value = '';
       form.title.value = '';
     }
@@ -182,7 +195,9 @@ var IssueAdd = /*#__PURE__*/function (_React$Component2) {
         type: "text",
         name: "title",
         placeholder: "Title"
-      }), /*#__PURE__*/React.createElement("button", null, "Add"));
+      }), /*#__PURE__*/React.createElement("button", {
+        type: "submit"
+      }, "Add"));
     }
   }]);
 
@@ -208,6 +223,11 @@ var IssueList = /*#__PURE__*/function (_React$Component3) {
   }
 
   _createClass(IssueList, [{
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      this.loadData();
+    }
+  }, {
     key: "loadData",
     value: function () {
       var _loadData = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
@@ -216,7 +236,7 @@ var IssueList = /*#__PURE__*/function (_React$Component3) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                query = "query {\n            issueList {\n                id\n                title\n                status\n                owner\n                created\n                effort\n                due\n            }\n        }";
+                query = "query {\n      issueList {\n        id\n        title\n        status\n        owner\n        created\n        effort\n        due\n      }\n    }";
                 _context.next = 3;
                 return graphQLFetch(query);
 
@@ -244,11 +264,6 @@ var IssueList = /*#__PURE__*/function (_React$Component3) {
       return loadData;
     }()
   }, {
-    key: "componentDidMount",
-    value: function componentDidMount() {
-      this.loadData();
-    }
-  }, {
     key: "createIssue",
     value: function () {
       var _createIssue = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(issue) {
@@ -257,7 +272,7 @@ var IssueList = /*#__PURE__*/function (_React$Component3) {
           while (1) {
             switch (_context2.prev = _context2.next) {
               case 0:
-                query = "mutation issueAdd($issue: IssueInputs!) {\n            issueAdd(issue: $issue) {\n                id\n            }\n        }";
+                query = "mutation issueAdd($issue: IssueInputs!) {\n      issueAdd(issue: $issue) {\n        id\n      }\n    }";
                 _context2.next = 3;
                 return graphQLFetch(query, {
                   issue: issue
@@ -287,8 +302,9 @@ var IssueList = /*#__PURE__*/function (_React$Component3) {
   }, {
     key: "render",
     value: function render() {
+      var issues = this.state.issues;
       return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("h1", null, "Issue Tracker"), /*#__PURE__*/React.createElement(IssueFilter, null), /*#__PURE__*/React.createElement("hr", null), /*#__PURE__*/React.createElement(IssueTable, {
-        issues: this.state.issues
+        issues: issues
       }), /*#__PURE__*/React.createElement("hr", null), /*#__PURE__*/React.createElement(IssueAdd, {
         createIssue: this.createIssue
       }));
