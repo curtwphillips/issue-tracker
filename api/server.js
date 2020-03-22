@@ -5,7 +5,10 @@ const { GraphQLScalarType } = require('graphql');
 const { Kind } = require('graphql/language');
 const { MongoClient } = require('mongodb');
 
-const url = 'mongodb://localhost/issuetracker';
+require('dotenv').config();
+
+const port = process.env.API_SERVER_PORT || 3000;
+const url = process.env.DB_URL || 'mongodb://localhost/issuetracker';
 let db;
 
 async function getNextSequence(name) {
@@ -105,8 +108,8 @@ async function connectToDb() {
 (async function () {
     try {
         await connectToDb();
-        app.listen(3000, function () {
-            console.log('API server started on port 3000');
+        app.listen(port, function () {
+            console.log(`API server started on port ${port}`);
         });
     } catch (err) {
         console.log('Error:', err);
