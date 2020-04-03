@@ -1,5 +1,4 @@
-/* globals React */
-
+import React from 'react';
 import PropTypes from 'prop-types';
 
 export default class IssueAdd extends React.Component {
