@@ -1,23 +1,13 @@
+require('dotenv').config();
 const fs = require('fs');
 const express = require('express');
 const { ApolloServer, UserInputError } = require('apollo-server-express');
-const { MongoClient } = require('mongodb');
 const GraphQLDate = require('./graphql_date.js');
-
-require('dotenv').config();
+const { connectToDb, getNextSequence } = require('./db.js');
+const { installHandler } = require('./api_handler.js');
 
 const port = process.env.API_SERVER_PORT || 3000;
-const url = process.env.DB_URL || 'mongodb://localhost/issuetracker';
 let db;
-
-async function getNextSequence(name) {
-  const result = await db.collection('counters').findOneAndUpdate(
-    { _id: name },
-    { $inc: { current: 1 } },
-    { returnOriginal: false },
-  );
-  return result.value.current;
-}
 
 function validateIssue(issue) {
   const errors = [];
@@ -79,17 +69,12 @@ const server = new ApolloServer({
 
 const app = express();
 
+installHandler(app);
+
 const enableCors = (process.env.ENABLE_CORS || 'true') === 'true';
 console.log('CORS setting:', enableCors);
 
 server.applyMiddleware({ app, path: '/graphql', cors: enableCors });
-
-async function connectToDb() {
-  const client = new MongoClient(url, { useNewUrlParser: true, useUnifiedTopology: true });
-  await client.connect();
-  console.log('Connected to MongoDB at', url);
-  db = client.db();
-}
 
 (async function start() {
   try {
